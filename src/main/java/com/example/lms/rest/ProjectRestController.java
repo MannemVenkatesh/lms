@@ -74,7 +74,7 @@ public class ProjectRestController {
 
     @PostMapping("/{id}/skills")
     public ResponseEntity<Project> addSkill(@PathVariable Long id, @RequestParam String skillName) {
-        Project project = projectService.getProjectById(id)
+        projectService.getProjectById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
         // We need to handle skill creation/retrieval here or in service

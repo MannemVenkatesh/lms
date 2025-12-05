@@ -6,7 +6,6 @@ import com.example.lms.entity.Project;
 import com.example.lms.entity.Skill;
 import com.example.lms.repository.AssignmentRepository;
 import com.example.lms.repository.LabourRepository;
-import com.example.lms.repository.ProjectRepository;
 import com.example.lms.repository.SkillRepository;
 import com.example.lms.service.ProjectService;
 import com.example.lms.service.RecommendationService;
@@ -40,9 +39,6 @@ public class ProjectController {
 
     @Autowired
     private SkillRepository skillRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @GetMapping
     public String listProjects(Model model) {
