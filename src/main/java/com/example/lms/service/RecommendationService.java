@@ -23,9 +23,14 @@ public class RecommendationService {
     public List<Labour> recommendLabours(List<String> requiredSkills) {
         List<Labour> allLabours = labourRepository.findAll();
 
-        // Filter by skills
+        // Filter by skills and availability
         List<Labour> qualifiedLabours = allLabours.stream()
+                .filter(labour -> labour.getStatus() == com.example.lms.entity.LabourStatus.AVAILABLE) // Check
+                                                                                                       // availability
                 .filter(labour -> {
+                    if (labour.getSkills() == null) {
+                        return false;
+                    }
                     Set<String> labourSkillNames = labour.getSkills().stream()
                             .map(Skill::getName)
                             .collect(Collectors.toSet());

@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "labours")
-public class Labour {
+@Table(name = "labours", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "contactNumber")
+})
+public class Labour extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +33,9 @@ public class Labour {
     @OneToMany(mappedBy = "labour")
     @JsonIgnoreProperties("labour")
     private List<Rating> ratings;
+
+    @Convert(converter = LabourStatusConverter.class)
+    private LabourStatus status = LabourStatus.AVAILABLE; // Default status
 
     // Getters and Setters
     public Long getId() {
@@ -87,5 +92,13 @@ public class Labour {
 
     public void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public LabourStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LabourStatus status) {
+        this.status = status;
     }
 }

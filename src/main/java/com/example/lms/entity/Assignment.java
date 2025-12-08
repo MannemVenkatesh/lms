@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "assignments")
-public class Assignment {
+public class Assignment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +23,10 @@ public class Assignment {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    // Status can be ACTIVE, COMPLETED, TERMINATED
-    private String status;
+    @Convert(converter = AssignmentStatusConverter.class)
+    private AssignmentStatus status;
+
+    private String notes;
 
     // Getters and Setters
     public Long getId() {
@@ -67,11 +69,19 @@ public class Assignment {
         this.endDate = endDate;
     }
 
-    public String getStatus() {
+    public AssignmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AssignmentStatus status) {
         this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

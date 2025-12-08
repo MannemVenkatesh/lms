@@ -72,8 +72,16 @@ public class RatingRestController {
         rating.setScore(request.getScore());
         rating.setComments(request.getComments());
 
-        Rating saved = ratingRepository.save(rating);
-        return ResponseEntity.ok(saved);
+        try {
+            Rating saved = ratingRepository.save(rating);
+            return ResponseEntity.ok(saved);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorResponse("Rating already exists for this project and labour"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body(new ErrorResponse("Internal server error: " + e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")

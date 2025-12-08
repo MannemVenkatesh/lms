@@ -60,13 +60,12 @@ public class ProjectRestController {
         Project project = projectService.getProjectById(id)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        if (project.getRequiredSkills() == null || project.getRequiredSkills().isEmpty()) {
-            return ResponseEntity.ok(List.of());
+        List<String> skillNames = java.util.Collections.emptyList();
+        if (project.getRequiredSkills() != null && !project.getRequiredSkills().isEmpty()) {
+            skillNames = project.getRequiredSkills().stream()
+                    .map(skill -> skill.getName())
+                    .collect(Collectors.toList());
         }
-
-        List<String> skillNames = project.getRequiredSkills().stream()
-                .map(skill -> skill.getName())
-                .collect(Collectors.toList());
 
         List<Labour> recommendations = recommendationService.recommendLabours(skillNames);
         return ResponseEntity.ok(recommendations);

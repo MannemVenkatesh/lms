@@ -110,7 +110,7 @@ public class ProjectController {
         assignment.setProject(project);
         assignment.setLabour(labour);
         assignment.setStartDate(LocalDate.now());
-        assignment.setStatus("ACTIVE");
+        assignment.setStatus(com.example.lms.entity.AssignmentStatus.ACTIVE);
 
         assignmentRepository.save(assignment);
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "wages", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "assignment_id", "calculated_date" })
 })
-public class Wage {
+public class Wage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

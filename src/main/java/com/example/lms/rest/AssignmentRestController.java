@@ -50,32 +50,32 @@ public class AssignmentRestController {
 
         // Check if labour is already assigned to this project
         boolean alreadyAssigned = assignmentRepository.existsByProjectIdAndLabourIdAndStatus(
-                request.getProjectId(), request.getLabourId(), "ACTIVE");
+                request.getProjectId(), request.getLabourId(), com.example.lms.entity.AssignmentStatus.ACTIVE);
 
         if (alreadyAssigned) {
             return ResponseEntity.status(409)
                     .body(new ErrorResponse("Labour is already assigned to this project"));
         }
 
-        // Check if labour has any active assignments (occupied)
-        List<Assignment> activeAssignments = assignmentRepository.findByLabourIdAndStatus(
-                request.getLabourId(), "ACTIVE");
+        // Check if labour is currently occupied (ACTIVE assignment in any project)
+        List<Assignment> activeAssignments = assignmentRepository.findByLabourId(labour.getId()).stream()
+                .filter(a -> a.getStatus() == com.example.lms.entity.AssignmentStatus.ACTIVE)
+                .collect(java.util.stream.Collectors.toList());
 
         if (!activeAssignments.isEmpty()) {
             Assignment existingAssignment = activeAssignments.get(0);
-            return ResponseEntity.status(409)
-                    .body(new OccupiedErrorResponse(
-                            "Labour is currently occupied with another project",
-                            existingAssignment.getProject().getName(),
-                            existingAssignment.getProject().getId(),
-                            existingAssignment.getStartDate()));
+            return ResponseEntity.status(409).body(new OccupiedErrorResponse(
+                    "Labour is currently occupied with another project",
+                    existingAssignment.getProject().getName(),
+                    existingAssignment.getProject().getId(),
+                    existingAssignment.getStartDate()));
         }
 
         Assignment assignment = new Assignment();
         assignment.setProject(project);
         assignment.setLabour(labour);
         assignment.setStartDate(LocalDate.now());
-        assignment.setStatus("ACTIVE");
+        assignment.setStatus(com.example.lms.entity.AssignmentStatus.ACTIVE);
 
         Assignment saved = assignmentRepository.save(assignment);
         return ResponseEntity.ok(saved);
@@ -86,7 +86,7 @@ public class AssignmentRestController {
         Assignment assignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
-        assignment.setStatus("COMPLETED");
+        assignment.setStatus(com.example.lms.entity.AssignmentStatus.COMPLETED);
         assignment.setEndDate(LocalDate.now());
 
         Assignment updated = assignmentRepository.save(assignment);

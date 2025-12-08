@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Min;
 @Table(name = "ratings", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "labour_id", "project_id" })
 })
-public class Rating {
+public class Rating extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
